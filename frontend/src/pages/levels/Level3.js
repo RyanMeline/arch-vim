@@ -5,15 +5,16 @@ import { useRef, useState } from "react";
 import { initVimMode } from "monaco-vim";
 
 export default function Level3() {
-  const [passed, setPassed] = useState(false);
+  	const [passed, setPassed] = useState(false);
     //watch keystrokes for i, or watch mode change to insert
     //
     //Something like this:
     //vimModeRef.current.on('modeChange', (mode) => {
     //  console.log("Vim mode:", mode.mode);
     //});
-  const editorRef = useRef(null);
+  	const editorRef = useRef(null);
 	const vimModeRef = useRef(null);
+
 
 	function handleMount(editor, monaco) {	
 		editorRef.current = editor;
@@ -31,7 +32,27 @@ export default function Level3() {
 	
 		editor.getDomNode().appendChild(statusNode);
 		vimModeRef.current = initVimMode(editor, statusNode);
-    
+
+		let hasEnteredInsert = false;
+		
+		//Watches current mode
+		const observer = new MutationObserver(() => {
+			const mode = statusNode.textContent;
+			console.log(mode);
+
+			//For level
+			if(mode.includes("INSERT"))
+				hasEnteredInsert = true;
+			if(hasEnteredInsert && mode.includes("NORMAL"))
+				setPassed (true);
+		});
+
+		observer.observe(statusNode, {
+			childList: true,
+			characterData: true,
+			subtree: true
+		})
+
 		//Cursor line info at bottom
 		const cursorPosNode = document.createElement("div");
 		cursorPosNode.style.position = "absolute";
@@ -51,10 +72,7 @@ export default function Level3() {
 		//Key logger (use for checking for certain key presses)
 		editor.onKeyDown((e) => {
 			console.log("Key pressed: ", e.browserEvent.key);
-      console.log(statusNode.textContent);
-      const curMode = statusNode.textContent;
-      if(curMode == "--INSERT--") console.log("aaaa");
-		});
+      	});
 
 
 	}
@@ -78,34 +96,18 @@ export default function Level3() {
     return (
       <div>
         <h1>Level 3</h1>
-        <p>Vim has multiple modes that allow you to do different things. So far, you have been in what is called "Normal" mode, which is where most commands can be used. Your current mode is listed on the bottom right of the editor.<br></br><br></br>
+        <p>
+		Vim has multiple modes which allow for different actions to be taken. So far, you have been in what is called "Normal" mode, which is where most commands are used. Normal mode is the default mode of the Vim editor, but it can always be returned to from other modes by pressed your 'esc' key. Your current mode is listed on the bottom right of the editor.<br></br><br></br>
         In this level, you will use what is called "Insert" mode. <br></br>
         Insert mode is the mode that allows you to actually type!<br></br><br></br>
-        To enter Inser mode, press: i<br></br>
-        To exit back to Normal mode, press: escape<br></br><br></br>
+        There are many different ways to enter insert mode, the most common being:
+		<p style={{paddingLeft: 50}}>
+			'i' - Enters insert mode before the cursor
+		</p><br></br>
         Objective: Enter Insert mode, and then exit back to Normal mode.<br></br>
         Although it isn't required, feel free to type as well!
         </p>
-        <Editor
-		height = "500px"
-		width = "1000px"
-		theme = "vs-dark"
-		defaultLanguage="c" //This is for highlighting
-		defaultValue=
-{ //Code that appears on screen
-`#include <stdio.h>
-
-void main() {
-	printf("Hello World");
-	return 0; 
-}`
-}
-		options = {{
-			minimap: { enabled: false }
-		}}
-		onMount={handleMount}
-		/>
-    {passed && (
+		{passed && (
             <div style={{
                 marginTop: "20px",
                 padding: "10px",
@@ -115,9 +117,17 @@ void main() {
             }}>
         <h3 style={{ color: "#4caf50" }}>You passed!</h3>
         <p style = {{ color: "white" }}>
-            Move on to the next level:
-            <Link to="/levels/2" style={{ marginLeft: "8px", color: "#4caf50" }}>
-                Level 2
+				Good job! Some of the other methods of entering Insert mode are:<br></br>
+			<p style = {{paddingLeft: 50}}>
+				'a' - Enters Insert mode after the cursor <br></br>
+				'o' - Create a new line under the current and enter Insert <br></br>
+				'shift' + 'i' - Enter Insert at the beginning of the current line<br></br>
+				'shift' + 'a' - Enter Insert at the end of the current line<br></br>
+				'shift' + 'o' - Create a new line above the current and enter Insert
+			</p>
+			Move on to the next level:
+            <Link to="/levels/4" style={{ marginLeft: "8px", color: "#4caf50" }}>
+                Level 4
             </Link>
         </p>
         <p style = {{ color: "white" }}>
@@ -127,7 +137,27 @@ void main() {
             </Link>
         </p>
     </div>
-)}
+)}<br></br>
+        <Editor
+		height = "500px"
+		width = "1000px"
+		theme = "vs-dark"
+		defaultLanguage="c" //This is for highlighting
+		defaultValue=
+{ //Code that appears on screen
+`#include <stdio.h>
+
+int main() {
+	printf("Hello World");
+	return 0; 
+}`
+}
+		options = {{
+			minimap: { enabled: false }
+		}}
+		onMount={handleMount}
+		/>
+    
       </div>  
     );
 }

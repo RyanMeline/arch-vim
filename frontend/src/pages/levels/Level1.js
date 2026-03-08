@@ -63,16 +63,42 @@ export default function Level1() {
       <div style={{ padding: "10px" }}>
         <h1>Level 1</h1>
         <h3>Learn how to navigate a file</h3>
-        <p>By default, Vim uses the keys h, j, k, l for navigation in the editor.<br></br>
+        <p>
+        By default, Vim uses the keys h, j, k, l for navigation in the editor.</p>
+        <p style={{paddingLeft: 50}}>
             h -> move left<br></br>
             j -> move down<br></br>
             k -> move up<br></br>
-            l -> move right<br></br><br></br>
+            l -> move right
+        </p>
+        <p>
         Objective: Without using your arrow keys, move the cursor to Line 4, Column 15. {/* After 'Hello' */}
         </p>
-
+        {passed && (
+            <div style={{
+                marginTop: "20px",
+                padding: "10px",
+                background: "#1e1e1e",
+                border: "1px solid #4caf50",
+                borderRadius: "5px"
+            }}>
+                <h3 style={{ color: "#4caf50" }}>You passed!</h3>
+                <p style = {{ color: "white" }}>
+                    Move on to the next level:
+                    <Link to="/levels/2" style={{ marginLeft: "8px", color: "#4caf50" }}>
+                        Level 2
+                    </Link>
+                </p>
+                <p style = {{ color: "white" }}>
+                    Or go back home:
+                    <Link to="/" style= {{ marginLeft: "8px"}}>
+                        Home
+                    </Link>
+                </p>
+            </div>
+    )}
+    <br></br>
 {/* EDITOR IMPLEMENTATION */}
-        <>
 		<Editor
 		height = "500px"
 		width = "1000px"
@@ -86,38 +112,13 @@ export default function Level1() {
 { //Default code that appears on editor
 `#include <stdio.h>
 
-void main() {
+int main() {
 	printf("Hello World");
 	return 0; 
 }
 `
 }
         />
-        {/* Check button. Thinking about changing this to an automatic thing that fires when the cursor gets to those spots, rather than waiting to press the check button */}
-		{passed && (
-            <div style={{
-                marginTop: "20px",
-                padding: "10px",
-                background: "#1e1e1e",
-                border: "1px solid #4caf50",
-                borderRadius: "5px"
-            }}>
-        <h3 style={{ color: "#4caf50" }}>You passed!</h3>
-        <p style = {{ color: "white" }}>
-            Move on to the next level:
-            <Link to="/levels/2" style={{ marginLeft: "8px", color: "#4caf50" }}>
-                Level 2
-            </Link>
-        </p>
-        <p style = {{ color: "white" }}>
-            Or go back home:
-            <Link to="/" style= {{ marginLeft: "8px"}}>
-                Home
-            </Link>
-        </p>
-    </div>
-)}
-		</>
       </div>  
     );
 }
