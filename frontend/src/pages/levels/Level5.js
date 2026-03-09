@@ -121,8 +121,6 @@ void main() {
       }}
       onMount={handleMount}
       />
-  
-      <button onClick={checkAnswer}>Check</button>
       </>
           );  
 }
